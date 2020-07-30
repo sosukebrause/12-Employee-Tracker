@@ -1,0 +1,13 @@
+DROP DATABASE IF EXISTS employee_db;
+CREATE DATABASE employee_db;
+USE employee_db;
+CREATE TABLE employees(
+  id INT NOT NULL AUTO_INCREMENT,
+  fName VARCHAR(40) NOT NULL,
+  lName VARCHAR(40) NOT NULL,
+  -- roleId INT UNSIGNED NOT NULL,
+  PRIMARY KEY (id)
+);
+
+
+
