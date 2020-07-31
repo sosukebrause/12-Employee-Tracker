@@ -1,4 +1,4 @@
-const util = require("util");
+// const util = require("util");
 const mysql = require("mysql");
 const password = require("../password");
 
@@ -7,7 +7,7 @@ const connection = mysql.createConnection({
   port: 3306,
   user: "root",
   password: password,
-  database: "employee_DB",
+  database: "employee_tracker_db",
 });
 
 connection.connect((err) => {

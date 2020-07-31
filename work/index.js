@@ -1,8 +1,8 @@
 const { prompt } = require("inquirer");
-const DB = require("./db/orm");
+const DB = require("./config/orm");
 const { inherits } = require("util");
 const { async } = require("rxjs");
-const db = require("./db/orm");
+const db = require("./config/orm");
 require("console.table");
 
 init();
