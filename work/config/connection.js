@@ -1,4 +1,3 @@
-// const util = require("util");
 const mysql = require("mysql");
 const password = require("../password");
 
@@ -9,12 +8,5 @@ const connection = mysql.createConnection({
   password: password,
   database: "employee_tracker_db",
 });
-
-connection.connect((err) => {
-  if (err) throw err;
-  console.log("Connection successful");
-});
-
-connection.query = util.promisify(connection.query);
 
 module.exports = connection;

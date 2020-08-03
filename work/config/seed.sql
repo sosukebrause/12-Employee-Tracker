@@ -1,6 +1,5 @@
-USE employee_db;
 
-INSERT INTO employees(fName, lName)
+INSERT INTO employee (fName, lName)
 VALUES ("Sosuke", "Brause");
 
-SELECT * FROM employees;
+SELECT * FROM employee;
