@@ -13,7 +13,7 @@ const viewEmployees = () => {
 };
 const addEmployee = (employee) => {
   return new Promise((resolve, reject) => {
-    connection.query(`INSERT INTO employees SET ?`, [employee], (err, data) => {
+    connection.query(`INSERT INTO employee SET ?`, [employee], (err, data) => {
       if (err) {
         reject(err);
       } else {

@@ -18,12 +18,12 @@ const directory = () => {
         case "View all employees":
           viewEmployees().then((res) => {
             console.table(res);
-            mainMenu();
+            directory();
           });
           break;
         case "Add employee":
-          addEmployee().then((res) => {
-            console.table(res);
+          addEmployeePrompt().then((res) => {
+            console.log(res);
             directory();
           });
           break;
@@ -31,6 +31,41 @@ const directory = () => {
         // quit();
       }
     });
+};
+
+const addEmployeePrompt = () => {
+  employee = [];
+  return new Promise((resolve, reject) => {
+    viewEmployees()
+      .then((res) => {
+        res.forEach((element) => {
+          employee.push(element.full_name);
+        });
+      })
+      .then(() => {
+        inquirer
+          .prompt([
+            {
+              name: "fName",
+              type: "input",
+              message: "What is the first name?",
+            },
+            {
+              name: "lName",
+              type: "input",
+              message: "What is the last name?",
+            },
+          ])
+          .then((res) => {
+            newEmployee = {
+              fName: res.fName,
+              lName: res.lName,
+            };
+            addEmployee(newEmployee).then((res) => resolve(res));
+          });
+      })
+      .catch((err) => reject(err));
+  });
 };
 
 // const quit = () => {
