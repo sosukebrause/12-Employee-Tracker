@@ -17,13 +17,45 @@ const addEmployee = (employee) => {
       if (err) {
         reject(err);
       } else {
-        resolve({ msg: "successfully added employee" });
+        resolve({ msg: "Employee successfully added" });
+      }
+    });
+  });
+};
+const employeeByDept = () => {
+  return new Promise((resolve, reject) => {
+    connection.query(`SELECT * FROM department ? `, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
       }
     });
   });
 };
 
-module.exports = { viewEmployees, addEmployee };
+const updateEmployeeRole = (roleID, empID) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `UPDATE employee SET ? WHERE ?`,
+      [{ role_id: roleID }, { id: empID }],
+      (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ msg: "Employee role updated" });
+        }
+      }
+    );
+  });
+};
+
+module.exports = {
+  viewEmployees,
+  employeeByDept,
+  addEmployee,
+  updateEmployeeRole,
+};
 // class DB {
 //   constructor(connection) {
 //     this.connection = connection;
