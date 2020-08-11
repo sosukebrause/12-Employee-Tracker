@@ -11,20 +11,58 @@ const viewEmployees = () => {
     });
   });
 };
-const addEmployee = (employee) => {
+const viewRoles = () => {
   return new Promise((resolve, reject) => {
-    connection.query(`INSERT INTO employee SET ?`, [employee], (err, data) => {
+    connection.query(`SELECT * FROM role;`, (err, data) => {
       if (err) {
         reject(err);
       } else {
-        resolve({ msg: "Employee successfully added" });
+        resolve(data);
       }
     });
   });
 };
+const deleteEmployee = (empId) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`DELETE FROM employee WHERE ?`, [{ id: empId }], (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ msg: "success" });
+      }
+    });
+  });
+};
+const addEmployee = (employee) => {
+  return new Promise((resolve, reject) => {
+    let query = `INSERT INTO employee (fName, lName, role_id) VALUES (?, ?, ?)`;
+    connection.query(
+      query,
+      [employee.fName, employee.lName, employee.role_ID],
+      (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ msg: "Employee successfully added" });
+        }
+      }
+    );
+  });
+  // const addEmployee = (employee) => {
+  //   return new Promise((resolve, reject) => {
+  //     connection.query(`INSERT INTO employee SET ?`, [employee], (err, data) => {
+  //       if (err) {
+  //         reject(err);
+  //       } else {
+  //         resolve({ msg: "Employee successfully added" });
+  //       }
+  //     });
+  //   });
+};
 const employeeByDept = () => {
   return new Promise((resolve, reject) => {
-    connection.query(`SELECT * FROM department ? `, (err, data) => {
+    console.log("empByDept");
+    connection.query(`SELECT * FROM role;`, (err, data) => {
       if (err) {
         reject(err);
       } else {
@@ -52,9 +90,11 @@ const updateEmployeeRole = (roleID, empID) => {
 
 module.exports = {
   viewEmployees,
+  deleteEmployee,
   employeeByDept,
   addEmployee,
   updateEmployeeRole,
+  viewRoles,
 };
 // class DB {
 //   constructor(connection) {
