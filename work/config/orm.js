@@ -2,13 +2,26 @@ const connection = require("./connection");
 
 const viewEmployees = () => {
   return new Promise((resolve, reject) => {
-    connection.query(`SELECT * FROM employee;`, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
+    connection.query(
+      `SELECT
+    e.id id,
+    e.fName,
+    e.lName,
+    CONCAT_WS(" ", e.fName, e.lName) full_name,
+    role.id role_id,
+    role.title
+FROM
+    employee e
+LEFT JOIN role ON e.role_id = role.id
+ORDER BY e.id;`,
+      (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
       }
-    });
+    );
   });
 };
 const viewRoles = () => {
