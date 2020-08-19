@@ -41,7 +41,7 @@ const deleteEmployee = (empId) => {
       if (err) {
         reject(err);
       } else {
-        resolve({ msg: "success" });
+        resolve({ msg: "Employee successfully removed" });
       }
     });
   });
@@ -61,28 +61,6 @@ const addEmployee = (employee) => {
       }
     );
   });
-  // const addEmployee = (employee) => {
-  //   return new Promise((resolve, reject) => {
-  //     connection.query(`INSERT INTO employee SET ?`, [employee], (err, data) => {
-  //       if (err) {
-  //         reject(err);
-  //       } else {
-  //         resolve({ msg: "Employee successfully added" });
-  //       }
-  //     });
-  //   });
-};
-const employeeByDept = () => {
-  return new Promise((resolve, reject) => {
-    console.log("empByDept");
-    connection.query(`SELECT * FROM role;`, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
 };
 
 const updateEmployeeRole = (roleID, empID) => {
@@ -98,6 +76,19 @@ const updateEmployeeRole = (roleID, empID) => {
         }
       }
     );
+  });
+};
+
+const employeeByDept = () => {
+  return new Promise((resolve, reject) => {
+    console.log("empByDept");
+    connection.query(`SELECT * FROM role;`, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
   });
 };
 

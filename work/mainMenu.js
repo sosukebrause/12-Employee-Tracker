@@ -50,9 +50,10 @@ const directory = () => {
           });
           break;
         case "Update employee role":
-          updateRolePrompt().then((res) => {
-            console.log(res);
-            directory();
+          updateRolePrompt().then(() => {
+            viewEmployees()
+              .then((res) => console.table(res))
+              .then(() => directory());
           });
           break;
         // case "View employees by deparment":
@@ -62,8 +63,8 @@ const directory = () => {
         //   });
         //   break;
         case "Remove employee":
-          removeEmployee().then((res) => {
-            console.log(res);
+          removeEmployee().then(() => {
+            console.table();
             directory();
           });
           break;
@@ -106,18 +107,12 @@ const removeEmployee = async () => {
               })
               .then(() => {
                 console.log(toDelete);
-              });
-            // .then(() => {
-            //   deleteEmployee(employeeID).then((response) => {
-            //     resolve(response);
-            //   });
-            // });
+                deleteEmployee(toDelete)
+                  .then(() => viewEmployees())
+                  .then((response) => console.table(response));
+              })
+              .then((res) => resolve(res));
           });
-      })
-      .catch((err) => {
-        if (err) {
-          reject(err);
-        }
       });
   });
 };
@@ -129,17 +124,18 @@ const updateRolePrompt = async () => {
   employees.forEach((element) => {
     employeeNames.push(element.full_name);
   });
-  console.log(employeeNames);
+  // console.log(employeeNames);
 
   // Step 2: Populate Roles array
   const roleTitles = [];
   const roles = await viewRoles();
 
   roles.forEach((role) => {
-    titleNames.push(role.title);
+    roleTitles.push(role.title);
   });
+  // console.log(roleTitles);
 
-  inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       name: "employee",
       type: "list",
@@ -153,6 +149,23 @@ const updateRolePrompt = async () => {
       choices: roleTitles,
     },
   ]);
+  console.log(answers.employee);
+  console.log(answers.role);
+
+  const eData = await viewEmployees();
+  eData.forEach((element) => {
+    if (answers.employee === element.full_name) {
+      empID = element.id;
+    }
+  });
+
+  const rData = await viewRoles();
+  rData.forEach((role) => {
+    if (role.title === answers.role) {
+      roleID = role.id;
+    }
+  });
+  updateEmployeeRole(roleID, empID);
 };
 // const updateRolePrompt = async () => {
 //   let employeeNames = [];
