@@ -79,10 +79,9 @@ const updateEmployeeRole = (roleID, empID) => {
   });
 };
 
-const employeeByDept = () => {
+const positionByDept = () => {
   return new Promise((resolve, reject) => {
-    console.log("empByDept");
-    connection.query(`SELECT * FROM role;`, (err, data) => {
+    connection.query(`SELECT * FROM employee;`, (err, data) => {
       if (err) {
         reject(err);
       } else {
@@ -95,10 +94,10 @@ const employeeByDept = () => {
 module.exports = {
   viewEmployees,
   deleteEmployee,
-  employeeByDept,
   addEmployee,
   updateEmployeeRole,
   viewRoles,
+  positionByDept,
 };
 // class DB {
 //   constructor(connection) {

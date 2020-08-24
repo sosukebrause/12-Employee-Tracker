@@ -6,7 +6,7 @@ let role_ID;
 let employee_ID;
 const {
   viewEmployees,
-  // employeeByDept,
+  positionByDept,
   addEmployee,
   updateEmployeeRole,
   viewRoles,
@@ -23,7 +23,7 @@ const directory = () => {
         "View all employees",
         "View roles",
         "Remove employee",
-        // "View employees by department",
+        "View positions by department",
         "Add employee",
         "Update employee role",
         "Quit",
@@ -50,18 +50,16 @@ const directory = () => {
           });
           break;
         case "Update employee role":
-          updateRolePrompt().then(() => {
-            viewEmployees()
-              .then((res) => console.table(res))
-              .then(() => directory());
+          updateRolePrompt()
+            .then(() => console.log("Updated employee role"))
+            .then(() => directory());
+          break;
+        case "View positions by deparment":
+          positionByDept().then((res) => {
+            console.table(res);
+            directory();
           });
           break;
-        // case "View employees by deparment":
-        //   employeeByDept().then((res) => {
-        //     console.table(res);
-        //     directory();
-        //   });
-        //   break;
         case "Remove employee":
           removeEmployee().then(() => {
             console.table();
@@ -118,90 +116,65 @@ const removeEmployee = async () => {
 };
 
 const updateRolePrompt = async () => {
+  // Populate employees array
   let employeeNames = [];
   const employees = await viewEmployees();
 
   employees.forEach((element) => {
     employeeNames.push(element.full_name);
   });
-  // console.log(employeeNames);
-
-  // Step 2: Populate Roles array
+  // Populate Roles array
   const roleTitles = [];
   const roles = await viewRoles();
 
   roles.forEach((role) => {
     roleTitles.push(role.title);
   });
-  // console.log(roleTitles);
+  // Obtain employee name and action
+  const selection = await inquirer
+    .prompt([
+      {
+        name: "employee",
+        type: "list",
+        message: "Select employee to be updated",
+        choices: employeeNames,
+      },
+      {
+        name: "role",
+        type: "list",
+        message: "What would role would like to assign the employee?",
+        choices: roleTitles,
+      },
+    ])
+    .then((res) => {
+      let roleID;
+      let empID;
+      viewEmployees().then((eData) => {
+        eData.forEach((element) => {
+          if (res.employee === element.full_name) {
+            empID = element.id;
+          }
+          return empID;
+        });
 
-  const answers = await inquirer.prompt([
-    {
-      name: "employee",
-      type: "list",
-      message: "Which employee's role you want to update?",
-      choices: employeeNames,
-    },
-    {
-      name: "role",
-      type: "list",
-      message: "What is the new title of the employee?",
-      choices: roleTitles,
-    },
-  ]);
-  console.log(answers.employee);
-  console.log(answers.role);
-
-  const eData = await viewEmployees();
-  eData.forEach((element) => {
-    if (answers.employee === element.full_name) {
-      empID = element.id;
-    }
-  });
-
-  const rData = await viewRoles();
-  rData.forEach((role) => {
-    if (role.title === answers.role) {
-      roleID = role.id;
-    }
-  });
-  updateEmployeeRole(roleID, empID);
+        viewRoles().then((rData) => {
+          rData.forEach((role) => {
+            if (role.title === res.role) {
+              roleID = role.id;
+            }
+            return roleID;
+          });
+          updateEmployeeRole(roleID, empID);
+        });
+      });
+    });
 };
-// const updateRolePrompt = async () => {
-//   let employeeNames = [];
-
-//   return new Promise((resolve, reject) => {
-//     viewEmployees()
-//       .then((res) => {
-//         res.forEach((element) => {
-//           employeeNames.push(element.full_name);
-//         });
-//         console.log(employeeNames);
-//       })
-
-//         // Step 2: Populate Employee array
-//   const employeeArray = await viewEmployees();
-
-//       .then(() => {
-//         inquirer.prompt([
-//           {
-//             name: "employee",
-//             type: "list",
-//             message: "Which employee's role you want to update?",
-//             choices: employeeNames,
-//           },
-//         ]);
-//       });
-//   });
-// };
 
 const addEmployeePrompt = async () => {
   // Step 1: Populate Roles Array
   const roleArray = await viewRoles();
   const roleTitleArray = [];
-  // for (const role of roleArray) {
-  //   roleTitleArray.push(role.title);
-  // }
+
   for (var i = 0; i < roleArray.length; i++) {
     const role = roleArray[i];
     roleTitleArray.push(role.title);
@@ -241,10 +214,5 @@ const addEmployeePrompt = async () => {
 
   await addEmployee(newEmployee);
 };
-
-// const quit = () => {
-//   console.log("Goodbye");
-//   process.exit();
-// };
 
 module.exports = directory;
